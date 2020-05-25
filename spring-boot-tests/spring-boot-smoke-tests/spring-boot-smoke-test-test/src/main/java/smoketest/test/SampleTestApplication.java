@@ -29,9 +29,20 @@ import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 @ConfigurationPropertiesScan
 public class SampleTestApplication {
 
-	// NOTE: this application will intentionally not start without MySQL, the test will
-	// still run.
-
+	/** 启动流程
+	 * 1. new SpringApplication(Class<?>[] primarySources)
+	 * 	  赋值resourceLoader primarySources webApplicationType
+	 * 	  mainApplicationClass initializers  listeners
+	 * 2. 设置java.awt.headless属性
+	 * 3. prepareEnvironment方法，初始化environment
+	 * 4. printBanner 打印banner
+	 * 5. createApplicationContext 创建context
+	 * 6. prepareContext 做一些准备工作
+	 * 7. refreseContext 启动容器 spring-framework的范畴 很多功能依赖后置处理器
+	 * 8. afterContext 留给子类扩展
+	 * 9. 回调ApplicationRunner 和 CommandLineRunner
+	 * 10. 中间穿插SpringApplicationRunListener的各种生命周期回调函数
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(SampleTestApplication.class, args);
 	}
