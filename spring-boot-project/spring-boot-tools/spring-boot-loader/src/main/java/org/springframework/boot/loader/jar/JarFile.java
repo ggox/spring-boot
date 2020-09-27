@@ -16,6 +16,9 @@
 
 package org.springframework.boot.loader.jar;
 
+import org.springframework.boot.loader.data.RandomAccessData;
+import org.springframework.boot.loader.data.RandomAccessDataFile;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -34,9 +37,6 @@ import java.util.jar.Manifest;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 import java.util.zip.ZipEntry;
-
-import org.springframework.boot.loader.data.RandomAccessData;
-import org.springframework.boot.loader.data.RandomAccessDataFile;
 
 /**
  * Extended variant of {@link java.util.jar.JarFile} that behaves in the same way but
@@ -453,6 +453,7 @@ public class JarFile extends java.util.jar.JarFile implements Iterable<java.util
 		String handlers = System.getProperty(PROTOCOL_HANDLER, "");
 		System.setProperty(PROTOCOL_HANDLER,
 				("".equals(handlers) ? HANDLERS_PACKAGE : handlers + "|" + HANDLERS_PACKAGE));
+		// 重置缓存
 		resetCachedUrlHandlers();
 	}
 

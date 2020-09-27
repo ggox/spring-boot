@@ -16,6 +16,11 @@
 
 package org.springframework.boot.loader;
 
+import org.springframework.boot.loader.archive.Archive;
+import org.springframework.boot.loader.archive.ExplodedArchive;
+import org.springframework.boot.loader.archive.JarFileArchive;
+import org.springframework.boot.loader.jar.JarFile;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
@@ -24,11 +29,6 @@ import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.springframework.boot.loader.archive.Archive;
-import org.springframework.boot.loader.archive.ExplodedArchive;
-import org.springframework.boot.loader.archive.JarFileArchive;
-import org.springframework.boot.loader.jar.JarFile;
 
 /**
  * Base class for launchers that can start an application with a fully configured
@@ -49,7 +49,9 @@ public abstract class Launcher {
 	 * @throws Exception if the application fails to launch
 	 */
 	protected void launch(String[] args) throws Exception {
+		// 如果不是 exploded(文件系统)
 		if (!isExploded()) {
+			// 注册 UrlProtocolHandler
 			JarFile.registerUrlProtocolHandler();
 		}
 		ClassLoader classLoader = createClassLoader(getClassPathArchivesIterator());
