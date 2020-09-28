@@ -54,9 +54,12 @@ public abstract class Launcher {
 			// 注册 UrlProtocolHandler
 			JarFile.registerUrlProtocolHandler();
 		}
+		// 创建 classLoader
 		ClassLoader classLoader = createClassLoader(getClassPathArchivesIterator());
 		String jarMode = System.getProperty("jarmode");
+		// JarLauncher 的 getMainClass 返回的是 MANIFEST.MF 里的 Start-Class 对象的值
 		String launchClass = (jarMode != null && !jarMode.isEmpty()) ? JAR_MODE_LAUNCHER : getMainClass();
+		// 启动
 		launch(args, launchClass, classLoader);
 	}
 
@@ -108,6 +111,7 @@ public abstract class Launcher {
 	 */
 	protected void launch(String[] args, String launchClass, ClassLoader classLoader) throws Exception {
 		Thread.currentThread().setContextClassLoader(classLoader);
+		// 创建 MainMethodRunner 代用 run 方法，逻辑比较简单，反射调用 main 方法，关键在于 classLoader 加载类方法,LaunchedURLClassLoader loadClass 方法
 		createMainMethodRunner(launchClass, args, classLoader).run();
 	}
 
@@ -163,6 +167,7 @@ public abstract class Launcher {
 		if (!root.exists()) {
 			throw new IllegalStateException("Unable to determine code source archive from " + root);
 		}
+		// 根据是文件还是文件夹判断是 jar 包还是解压文件夹
 		return (root.isDirectory() ? new ExplodedArchive(root) : new JarFileArchive(root));
 	}
 

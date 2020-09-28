@@ -16,14 +16,14 @@
 
 package org.springframework.boot.loader;
 
+import org.springframework.boot.loader.archive.Archive;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.jar.Manifest;
-
-import org.springframework.boot.loader.archive.Archive;
 
 /**
  * Base class for executable archive {@link Launcher}s.
@@ -101,7 +101,9 @@ public abstract class ExecutableArchiveLauncher extends Launcher {
 
 	@Override
 	protected Iterator<Archive> getClassPathArchivesIterator() throws Exception {
+		// 判断是否进一步搜索的搜索器 JarLauncher 是 判断是否位于 "/BOOT-INF/" 下
 		Archive.EntryFilter searchFilter = this::isSearchCandidate;
+		// this.archive 具体实现由 createArchive() 决定
 		Iterator<Archive> archives = this.archive.getNestedArchives(searchFilter,
 				(entry) -> isNestedArchive(entry) && !isEntryIndexed(entry));
 		if (isPostProcessingClassPathArchives()) {
